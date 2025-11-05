@@ -229,11 +229,28 @@ class Api {
     }
 
     static user = {
+        me: () => this.request("/login/me"),
         getUsers: ()=> this.request("/login/user"),
         add: (name, password, permission) => this.request(`/login/adduser?user=${encodeURIComponent(name)}&pswd=${password}&grp=${permission}`),
         delete: (name) => this.request(`/login/deluser?user=${encodeURIComponent(name)}`),
         changePassword: (name, oldPassword, newPassword) => this.request(`/login/pswd?user=${encodeURIComponent(name)}&old=${oldPassword}&new=${newPassword}`),
         logout: () => this.request("/login/quit")
+    }
+
+    static ipManager = {
+         query: () => this.request("/ipac"),
+         allowList: {
+            enable: () => this.request("/ipac/allowlist/enable"),
+            disable: () => this.request("/ipac/allowlist/disable"),
+            add: (ip) => this.request(`/ipac/allowlist/add?ip=${ip}`),
+            delete: (ip) => this.request(`/ipac/allowlist/delete?ip=${ip}`),
+         },
+         denyList: {
+            enable: () => this.request("/ipac/denylist/enable"),
+            disable: () => this.request("/ipac/denylist/disable"),
+            add: (ip) => this.request(`/ipac/denylist/add?ip=${ip}`),
+            delete: (ip) => this.request(`/ipac/denylist/delete?ip=${ip}`),
+         }
     }
 
     static recording = {
@@ -427,7 +444,14 @@ class Api {
                 if (key && key.length > 0) params += `&key=${encodeURIComponent(key)}`;
                 return this.request(`/ctrl/rtmp?${params}`);
             },
-            stop: (index) => this.request(`/ctrl/rtmp?action=stop&index=${index}`)
+            stop: (index) => this.request(`/ctrl/rtmp?action=stop&index=${index}`),
+            setAutoRestart: (autoRestart) => this.request(`/ctrl/rtmp?action=set&autoRestart=${autoRestart}`),
+            setUrl: (url, key) => {
+                let params = 'action=set';
+                params += `&url=${encodeURIComponent(url)}`;
+                params += `&key=${encodeURIComponent(key)}`;
+                return this.request(`/ctrl/rtmp?${params}`);
+            },
         },
 
         srt: {
@@ -444,7 +468,9 @@ class Api {
                 if (ttl) params.append('ttl', ttl);
 
                 return this.request(`/ctrl/srt?${params.toString()}`);
-            }
+            },
+            setAutoRestart: (autoRestart) => this.request(`/ctrl/srt?action=set&autoRestart=${autoRestart}`),
+            setUrl: (url) => this.request(`/ctrl/srt?action=set&url=${encodeURIComponent(url)}`)
         },
         
         // NDI控制
@@ -634,6 +660,13 @@ class Api {
         setManualB: (b) => this.ctrl.set("mwb_b", b),
         manualB: () => this.ctrl.get("mwb_b"),
 
+        setManualROffset: (r) => this.ctrl.set("mwb_r_offset", r),
+        manualROffset: () => this.ctrl.get("mwb_r_offset"),
+        setManualGOffset: (g) => this.ctrl.set("mwb_g_offset", g),
+        manualGOffset: () => this.ctrl.get("mwb_g_offset"),
+        setManualBOffset: (b) => this.ctrl.set("mwb_b_offset", b),
+        manualBOffset: () => this.ctrl.get("mwb_b_offset"),
+
         setAwbPriority: (priority) => this.ctrl.set("wb_priority", priority),
         awbPriority: () => this.ctrl.get("wb_priority"),
 
@@ -682,7 +715,21 @@ class Api {
             setSat: (index, value) => this.request(`/ctrl/cc?action=set_sat&index=${index}&value=${value}`)
         },
 
+        blackLevel: {
+            query: () => this.request('/ctrl/black_level'),
+            enable: (enable) => this.request(`/ctrl/black_level?enable=${enable}`),
+            set: (master, r, g, b) => {
+                const params = new URLSearchParams();
+                params.append('master', master);
+                params.append('r', r);
+                params.append('g', g);
+                params.append('b', b);
+                return this.request(`/ctrl/black_level?${params.toString()}`);
+            }
+        },
+
         gamma: {
+            // which: gamma, black_level, black_gamma, knee
             get: (which) => this.request(`/ctrl/gamma?action=get&option=${which}`),
             base : {
                 query: () => this.request('/ctrl/gamma?action=get&option=gamma'),
@@ -790,14 +837,15 @@ class Api {
     }
 
     static upgrade = {
-        check: () => this.request("/ctrl/upgrade?action=fw_check"),
+        check: () => this.request("/ctrl/upgrade?action=fw_check", {timeout: 20000}),
         run: () => this.request("/ctrl/upgrade?action=run"),
         uiCheck: () => this.request("/ctrl/upgrade?action=ui_check")
     }
 
     static files = {
         listFolders: () => this.request("/DCIM/"),
-        listFiles: (folder) => this.request(`/DCIM/${folder}/`)
+        listFiles: (folder) => this.request(`/DCIM/${folder}/`),
+        deleteFile: (fileName) => this.request(`/DCIM/${fileName}?act=rm`)
     }
 
     static system = {
@@ -819,7 +867,7 @@ class Api {
         freed: {
             query: () => this.request('/ctrl/freed'),
             setCameraID: (id) => this.request(`/ctrl/freed?camera_id=${id}`),
-            setConfig: ({ ip, port }) => this.request(`/ctrl/freed?ip=${encodeURIComponent(ip)}&port=${port}`),
+            setConfig: ({index, ip, port }) => this.request(`/ctrl/freed?ip${index}=${encodeURIComponent(ip)}&port${index}=${port}`),
             enable: (value) => this.request(`/ctrl/freed?enable=${value}`)
         },
 

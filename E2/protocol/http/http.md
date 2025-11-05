@@ -909,3 +909,39 @@ GET /ctrl/set?mwb_r=3000
 
 For B channel, please use mwb_b.
 
+### Set Manual White Balance  (CCT/Tint and R/G/B offset)
+Set white balance mode to Manual mode first.
+
+```HTTP
+GET /ctrl/set?wb=Manual
+```
+
+Note: R/G/B offset are relative to (CCT & Tint)
+```HTTP
+GET /ctrl/get?k=mwb                  #get color temperature
+GET /ctrl/get?k=tint                 #get tint
+GET /ctrl/get?k=mwb_r_offset         #get r offset
+GET /ctrl/get?k=mwb_g_offset         #get g offset
+GET /ctrl/get?k=mwb_b_offset         #get b offset
+```
+
+```javascript
+GET /ctrl/get?k=mwb_r_offset
+{"code":0,"desc":"string","key":"mwb_r_offset","type":2,"ro":0,"value":0,"min":-100,"max":100,"step":1}
+```
+
+```HTTP
+GET /ctrl/set?mwb_r_offset=0         #set offset
+```
+
+### Set Black Level
+Set black level for Master/R/G/B channels
+
+```HTTP
+GET /ctrl/black_level
+{"enable":false,"master":0,"r":0,"g":0,"b":0,"min":-100,"max":100,"base":1,"ro":false}
+
+SET /ctrl/black_level?enable=1
+SET /ctrl/black_level?enable=0
+SET /ctrl/black_level?master=0&r=0&g=0&b=0
+```
