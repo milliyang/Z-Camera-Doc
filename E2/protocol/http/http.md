@@ -796,52 +796,52 @@ Choose the base curve for your adjustment, options:
 
 Get infomations
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=get&option=gamma
+GET /ctrl/gamma?action=get&option=gamma
 ```
 
 Set base curve to Rec709
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=gamma&base=0
+GET /ctrl/gamma?action=set&option=gamma&base=0
 ```
 
 Set base curve to sRGB
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=gamma&base=1
+GET /ctrl/gamma?action=set&option=gamma&base=1
 ```
 
 Set base curve to  2^2.2
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=gamma&base=2&power=22
+GET /ctrl/gamma?action=set&option=gamma&base=2&power=22
 ```
 
 #### Black level
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=get&option=black_level
+GET /ctrl/gamma?action=get&option=black_level
 ```
 
 Set level
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=black_level&enable=1&level=10
+GET /ctrl/gamma?action=set&option=black_level&enable=1&level=10
 ```
 
 #### Black gamma
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=get&option=black_gamma
+GET /ctrl/gamma?action=get&option=black_gamma
 ```
 
 Set range and level
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=black_gamma&enable=1&range=0&level=0
+GET /ctrl/gamma?action=set&option=black_gamma&enable=1&range=0&level=0
 ```
 
 #### Knee
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=get&option=knee
+GET /ctrl/gamma?action=get&option=knee
 ```
 
 Set point and slope
 ```HTTP
-GET /ctrl/cusomized_image_profile?action=set&option=knee&enable=1&point=0&slope=10
+GET /ctrl/gamma?action=set&option=knee&enable=1&point=0&slope=10
 ```
 
 ### Manual black level and rgb gain
